@@ -7,18 +7,25 @@ import java.util.Random;
 
 public class KMeansVisualizer extends JPanel {
     private static final int WIDTH = 800;
-    private static final int HEIGHT = 800;
-    private static final int NUM_POINTS = 300;
+    private static final int HEIGHT = 600;
+    private static final int MAX_ITERATIONS = 40;
+    private static final int NUM_POINTS = 9000;
 
-    private static final int MAX_ITERATIONS = 50;
-    private static final int NUM_CLUSTERS = 4;
+    private static final int NUM_CLUSTERS = 8;
 
     private ArrayList<Point> points;
     private ArrayList<Point> centroids;
+    private ArrayList<ArrayList<Point>> clusters;
+    private Color[] clusterColors;
 
     public KMeansVisualizer() {
         points = generateRandomPoints(NUM_POINTS);
         centroids = initializeCentroids(NUM_CLUSTERS);
+        clusters = new ArrayList<>(NUM_CLUSTERS);
+        clusterColors = generateClusterColors(NUM_CLUSTERS);
+        for (int i = 0; i < NUM_CLUSTERS; i++) {
+            clusters.add(new ArrayList<>());
+        }
     }
 
     private ArrayList<Point> generateRandomPoints(int numPoints) {
@@ -36,13 +43,21 @@ public class KMeansVisualizer extends JPanel {
     private ArrayList<Point> initializeCentroids(int numCentroids) {
         ArrayList<Point> centroids = new ArrayList<>();
         Random rand = new Random();
-
         for (int i = 0; i < numCentroids; i++) {
             int x = rand.nextInt(WIDTH);
             int y = rand.nextInt(HEIGHT);
             centroids.add(new Point(x, y));
         }
         return centroids;
+    }
+
+    private Color[] generateClusterColors(int numClusters) {
+        Color[] colors = new Color[numClusters];
+        for (int i = 0; i < numClusters; i++) {
+            float hue = (float) i / numClusters;
+            colors[i] = Color.getHSBColor(hue, 0.8f, 0.8f); // Adjust saturation and brightness as needed
+        }
+        return colors;
     }
 
     private int findClosestCentroid(Point p) {
@@ -59,25 +74,25 @@ public class KMeansVisualizer extends JPanel {
         return closestCentroid;
     }
 
-    private void updateCentroids(ArrayList<ArrayList<Point>> clusters) {
+    private void updateCentroids() {
         for (int i = 0; i < NUM_CLUSTERS; i++) {
             int sumX = 0, sumY = 0;
             for (Point p : clusters.get(i)) {
                 sumX += p.x;
                 sumY += p.y;
             }
-            int meanX = sumX / clusters.get(i).size();
-            int meanY = sumY / clusters.get(i).size();
-            centroids.set(i, new Point(meanX, meanY));
+            if (!clusters.get(i).isEmpty()) {
+                int meanX = sumX / clusters.get(i).size();
+                int meanY = sumY / clusters.get(i).size();
+                centroids.set(i, new Point(meanX, meanY));
+            }
         }
     }
 
     public void kmeans() {
         for (int iteration = 0; iteration < MAX_ITERATIONS; iteration++) {
-            ArrayList<ArrayList<Point>> clusters = new ArrayList<>(NUM_CLUSTERS);
-
-            for (int i = 0; i < NUM_CLUSTERS; i++) {
-                clusters.add(new ArrayList<>());
+            for (ArrayList<Point> cluster : clusters) {
+                cluster.clear();
             }
 
             for (Point p : points) {
@@ -85,7 +100,7 @@ public class KMeansVisualizer extends JPanel {
                 clusters.get(closestCentroid).add(p);
             }
 
-            updateCentroids(clusters);
+            updateCentroids();
             repaint();
 
             try {
@@ -96,22 +111,31 @@ public class KMeansVisualizer extends JPanel {
         }
     }
 
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        for (Point p : points) {
-            g.setColor(Color.BLUE);
-            g.fillOval(p.x, p.y, 5, 5);
+        // Draw points
+        for (int i = 0; i < NUM_CLUSTERS; i++) {
+            for (Point p : clusters.get(i)) {
+                g.setColor(clusterColors[i]);
+                g.fillOval(p.x, p.y, 7, 7);
+            }
         }
 
-        for (Point centroid : centroids) {
-            g.setColor(Color.RED);
-            g.fillRect(centroid.x - 5, centroid.y - 5, 10, 10);
+        // Draw centroids
+        for (int i = 0; i < centroids.size(); i++) {
+            g.setColor(clusterColors[i]);
+            g.fillRect(centroids.get(i).x - 5, centroids.get(i).y - 5, 14, 14);
+
+            g.setColor(Color.BLACK);
+            g.drawRect(centroids.get(i).x - 5, centroids.get(i).y - 5, 14, 14);
         }
+
     }
 
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         JFrame frame = new JFrame("K-Means Clustering Visualizer");
         KMeansVisualizer visualizer = new KMeansVisualizer();
         frame.add(visualizer);
