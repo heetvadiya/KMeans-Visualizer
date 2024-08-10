@@ -7,8 +7,8 @@ import java.util.Random;
 
 public class KMeansVisualizer extends JPanel {
     private static final int WIDTH = 800;
-    private static final int HEIGHT = 800;
-    private static final int MAX_ITERATIONS = 40;
+    private static final int HEIGHT = 600;
+    private static final int MAX_ITERATIONS = 20;
 
     private int numClusters;
     private int numPoints;
@@ -21,13 +21,16 @@ public class KMeansVisualizer extends JPanel {
     public KMeansVisualizer(int numClusters, int numPoints) {
         this.numPoints = numPoints;
         this.numClusters = numClusters;
+
         points = generateRandomPoints(numPoints);
         centroids = initializeCentroids(numClusters);
-        clusters = new ArrayList<>(numClusters);
         clusterColors = generateClusterColors(numClusters);
+
+        clusters = new ArrayList<>(numClusters);
         for (int i = 0; i < numClusters; i++) {
             clusters.add(new ArrayList<>());
         }
+
     }
 
     private ArrayList<Point> generateRandomPoints(int numPoints) {
@@ -139,8 +142,8 @@ public class KMeansVisualizer extends JPanel {
 
     public static void main(String[] args) {
 
-        int numClusters = Integer.parseInt(JOptionPane.showInputDialog("Enter number of clusters:"));
         int numPoints = Integer.parseInt(JOptionPane.showInputDialog("Enter number of points:"));
+        int numClusters = Integer.parseInt(JOptionPane.showInputDialog("Enter number of clusters:"));
 
         JFrame frame = new JFrame("K-Means Clustering Visualizer");
         KMeansVisualizer visualizer = new KMeansVisualizer(numClusters, numPoints);
