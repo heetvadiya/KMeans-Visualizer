@@ -7,23 +7,25 @@ import java.util.Random;
 
 public class KMeansVisualizer extends JPanel {
     private static final int WIDTH = 800;
-    private static final int HEIGHT = 600;
+    private static final int HEIGHT = 800;
     private static final int MAX_ITERATIONS = 40;
-    private static final int NUM_POINTS = 9000;
 
-    private static final int NUM_CLUSTERS = 8;
+    private int numClusters;
+    private int numPoints;
 
     private ArrayList<Point> points;
     private ArrayList<Point> centroids;
     private ArrayList<ArrayList<Point>> clusters;
     private Color[] clusterColors;
 
-    public KMeansVisualizer() {
-        points = generateRandomPoints(NUM_POINTS);
-        centroids = initializeCentroids(NUM_CLUSTERS);
-        clusters = new ArrayList<>(NUM_CLUSTERS);
-        clusterColors = generateClusterColors(NUM_CLUSTERS);
-        for (int i = 0; i < NUM_CLUSTERS; i++) {
+    public KMeansVisualizer(int numClusters, int numPoints) {
+        this.numPoints = numPoints;
+        this.numClusters = numClusters;
+        points = generateRandomPoints(numPoints);
+        centroids = initializeCentroids(numClusters);
+        clusters = new ArrayList<>(numClusters);
+        clusterColors = generateClusterColors(numClusters);
+        for (int i = 0; i < numClusters; i++) {
             clusters.add(new ArrayList<>());
         }
     }
@@ -75,7 +77,7 @@ public class KMeansVisualizer extends JPanel {
     }
 
     private void updateCentroids() {
-        for (int i = 0; i < NUM_CLUSTERS; i++) {
+        for (int i = 0; i < numClusters; i++) {
             int sumX = 0, sumY = 0;
             for (Point p : clusters.get(i)) {
                 sumX += p.x;
@@ -117,7 +119,7 @@ public class KMeansVisualizer extends JPanel {
         super.paintComponent(g);
 
         // Draw points
-        for (int i = 0; i < NUM_CLUSTERS; i++) {
+        for (int i = 0; i < numClusters; i++) {
             for (Point p : clusters.get(i)) {
                 g.setColor(clusterColors[i]);
                 g.fillOval(p.x, p.y, 7, 7);
@@ -136,8 +138,12 @@ public class KMeansVisualizer extends JPanel {
     }
 
     public static void main(String[] args) {
+
+        int numClusters = Integer.parseInt(JOptionPane.showInputDialog("Enter number of clusters:"));
+        int numPoints = Integer.parseInt(JOptionPane.showInputDialog("Enter number of points:"));
+
         JFrame frame = new JFrame("K-Means Clustering Visualizer");
-        KMeansVisualizer visualizer = new KMeansVisualizer();
+        KMeansVisualizer visualizer = new KMeansVisualizer(numClusters, numPoints);
         frame.add(visualizer);
         frame.setSize(WIDTH, HEIGHT);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
