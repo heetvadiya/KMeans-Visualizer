@@ -7,10 +7,11 @@ import java.util.Random;
 
 public class KMeansVisualizer extends JPanel {
     private static final int WIDTH = 800;
-    private static final int HEIGHT = 600;
-    private static final int NUM_CLUSTERS = 4;
+    private static final int HEIGHT = 800;
     private static final int NUM_POINTS = 300;
-    private static final int MAX_ITERATIONS = 10;
+
+    private static final int MAX_ITERATIONS = 50;
+    private static final int NUM_CLUSTERS = 4;
 
     private ArrayList<Point> points;
     private ArrayList<Point> centroids;
@@ -110,7 +111,7 @@ public class KMeansVisualizer extends JPanel {
         }
     }
 
-    public static void run() {
+    public static void main(String args[]) {
         JFrame frame = new JFrame("K-Means Clustering Visualizer");
         KMeansVisualizer visualizer = new KMeansVisualizer();
         frame.add(visualizer);
