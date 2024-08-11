@@ -6,7 +6,6 @@ This project is a Java-based visualizer for the K-Means clustering algorithm. It
 
 - **Real-Time Visualization**: Watch as the algorithm dynamically clusters points and updates the positions of centroids.
 - **Dynamic Parameters**: Choose the number of clusters and the number of points to visualize.
-- **Cluster Boundaries**: The final clusters are outlined with black borders to show the boundaries of each cluster.
 
 ## Requirements
 
