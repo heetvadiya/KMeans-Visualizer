@@ -155,3 +155,4 @@ public class KMeansVisualizer extends JPanel {
         visualizer.kmeans();
     }
 }
+
