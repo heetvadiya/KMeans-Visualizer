@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class KMeansVisualizer extends JPanel {
-    private static final int WIDTH = 800;
-    private static final int HEIGHT = 600;
+    private static final int WIDTH = 1500;
+    private static final int HEIGHT = 800;
     private static final int MAX_ITERATIONS = 20;
 
     private int numClusters;
@@ -30,7 +30,7 @@ public class KMeansVisualizer extends JPanel {
         for (int i = 0; i < numClusters; i++) {
             clusters.add(new ArrayList<>());
         }
-
+        this.setBackground(Color.BLACK);
     }
 
     private ArrayList<Point> generateRandomPoints(int numPoints) {
@@ -134,7 +134,7 @@ public class KMeansVisualizer extends JPanel {
             g.setColor(clusterColors[i]);
             g.fillRect(centroids.get(i).x - 5, centroids.get(i).y - 5, 14, 14);
 
-            g.setColor(Color.BLACK);
+            g.setColor(Color.WHITE);
             g.drawRect(centroids.get(i).x - 5, centroids.get(i).y - 5, 14, 14);
         }
 
